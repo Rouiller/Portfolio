@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Portfolio", "Portfolio\Port
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConsoleFPS", "ConsoleFPS\ConsoleFPS.vcxproj", "{2B2E4104-08DF-4B0C-9064-BB2BC5278E5A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tetris", "Tetris\Tetris.vcxproj", "{81B369F9-4A2B-4A47-936F-5B6CBDDC5ED9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{2B2E4104-08DF-4B0C-9064-BB2BC5278E5A}.Release|x64.Build.0 = Release|x64
 		{2B2E4104-08DF-4B0C-9064-BB2BC5278E5A}.Release|x86.ActiveCfg = Release|Win32
 		{2B2E4104-08DF-4B0C-9064-BB2BC5278E5A}.Release|x86.Build.0 = Release|Win32
+		{81B369F9-4A2B-4A47-936F-5B6CBDDC5ED9}.Debug|x64.ActiveCfg = Debug|x64
+		{81B369F9-4A2B-4A47-936F-5B6CBDDC5ED9}.Debug|x64.Build.0 = Debug|x64
+		{81B369F9-4A2B-4A47-936F-5B6CBDDC5ED9}.Debug|x86.ActiveCfg = Debug|Win32
+		{81B369F9-4A2B-4A47-936F-5B6CBDDC5ED9}.Debug|x86.Build.0 = Debug|Win32
+		{81B369F9-4A2B-4A47-936F-5B6CBDDC5ED9}.Release|x64.ActiveCfg = Release|x64
+		{81B369F9-4A2B-4A47-936F-5B6CBDDC5ED9}.Release|x64.Build.0 = Release|x64
+		{81B369F9-4A2B-4A47-936F-5B6CBDDC5ED9}.Release|x86.ActiveCfg = Release|Win32
+		{81B369F9-4A2B-4A47-936F-5B6CBDDC5ED9}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
