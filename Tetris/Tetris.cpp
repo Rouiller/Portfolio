@@ -5,19 +5,20 @@ using namespace std;
 
 #include <Windows.h>
 
+// Console dimensions
+int screenWidth = 120;
+int screenHeight = 40;
+
+// Available pieces
 wstring tetromino[7];
+
+// Playing field
 int fieldWidth = 12;
 int fieldHeight = 18;
 unsigned char* field = nullptr;
 
-
-int screenWidth = 120;
-int screenHeight = 40;
-
-
 /* Clockwise Rotation
-
-	  0°		   90°			 180°		   270°
+     0 deg		  90 deg	   180 deg		 270 deg
 +--+--+--+--+ +--+--+--+--+ +--+--+--+--+ +--+--+--+--+
 |00|01|02|03| |12|08|04|00| |15|14|13|12| |03|07|11|15|
 +--+--+--+--+ +--+--+--+--+ +--+--+--+--+ +--+--+--+--+
@@ -26,32 +27,38 @@ int screenHeight = 40;
 |08|09|10|11| |14|10|06|02| |07|06|05|04| |01|05|09|13|
 +--+--+--+--+ +--+--+--+--+ +--+--+--+--+ +--+--+--+--+
 |12|13|14|15| |15|11|07|03| |03|02|01|00| |00|04|08|12|
-+--+--+--+--+ +--+--+--+--+ +--+--+--+--+ +--+--+--+--+
-
-*/
-
-int Rotate(int x, int y, int r)
++--+--+--+--+ +--+--+--+--+ +--+--+--+--+ +--+--+--+--+ */
+int Rotate(int px, int py, int r)
 {
+	int pi = 0;
 	switch (r % 4)
 	{
-	case 0: return y * 4 + x;
-	case 1: return 12 + y - (x * 4);
-	case 2: return 15 - (y * 4) - x;
-	case 3: return 3 - y + (x * 4);
+		case 0: // 0 deg
+			pi = py * 4 + px;
+			break;
+		case 1: // 90 deg
+			pi = 12 + py - (px * 4);
+			break;
+		case 2: // 180 deg
+			pi = 15 - (py * 4) - px;
+			break;
+		case 3: // 270 deg
+			pi = 3 - py + (px * 4);
+			break;
 	}
 
-	return 0;
+	return pi;
 }
 
 
-bool DoesPiecefit(int tetrominoType, int rotation, int posX, int posY)
+// Checks if a pice can fit
+bool DoesPiecefit(int tetrominoType, int r, int posX, int posY)
 {
 	for (int px = 0; px < 4; px++)
 	{
 		for (int py = 0; py < 4; py++)
 		{
-			int pi = Rotate(px, py, rotation);
-
+			int pi = Rotate(px, py, r);
 			int fi = (posY + py) * fieldWidth + (posX + px);
 
 			if (posX + px >= 0 && posX + px < fieldWidth)
@@ -70,7 +77,6 @@ bool DoesPiecefit(int tetrominoType, int rotation, int posX, int posY)
 	return true;
 }
 
-
 int main()
 {
 	// Screen buffer
@@ -80,11 +86,11 @@ int main()
 	SetConsoleActiveScreenBuffer(console);
 	DWORD bytesWritten = 0;
 
-	// Assets 
-	tetromino[0].append(L"X...");
-	tetromino[0].append(L"X...");
-	tetromino[0].append(L"X...");
-	tetromino[0].append(L"X...");
+	// Assets 4 x 4
+	tetromino[0].append(L"..X.");
+	tetromino[0].append(L"..X.");
+	tetromino[0].append(L"..X.");
+	tetromino[0].append(L"..X.");
 
 	tetromino[1].append(L".X..");
 	tetromino[1].append(L".X..");
@@ -140,6 +146,7 @@ int main()
 	int speed = 20;
 	int speedCounter = 0;
 	bool forceDown = false;
+
 	int pieceCount = 0;
 	int score = 0;
 
@@ -148,22 +155,24 @@ int main()
 	// Game loop
 	while (!gameOver)
 	{
-		// Game timing
+		// ----------- Timing -----------
 		this_thread::sleep_for(50ms);
 		speedCounter++;
 		forceDown = (speedCounter == speed);
 
-		// Input
+		// ----------- Input -----------
 		for (int k = 0; k < 4; k++)
 		{													   // R    L   D Z
 			key[k] = (0x8000 & GetAsyncKeyState((unsigned char)("\x27\x25\x28Z"[k]))) != 0;
 		}
 
-		// Game logic
+		// ----------- Game logic -----------
+		// Piece movement
 		currentX += (key[0] && DoesPiecefit(currentPiece, currentRotation, currentX + 1, currentY)) ? 1 : 0;
 		currentX -= (key[1] && DoesPiecefit(currentPiece, currentRotation, currentX - 1, currentY)) ? 1 : 0;
 		currentY += (key[2] && DoesPiecefit(currentPiece, currentRotation, currentX, currentY + 1)) ? 1 : 0;
-
+		
+		// Piece rotation
 		if (key[3])
 		{
 			currentRotation += (!rotateHold && DoesPiecefit(currentPiece, currentRotation + 1, currentX, currentY)) ? 1 : 0;
@@ -174,8 +183,18 @@ int main()
 			rotateHold = false;
 		}
 
+		// Piece needs to go down sometimes!
 		if (forceDown)
 		{
+			// Update difficulty
+			speedCounter = 0;
+			pieceCount++;
+			if (pieceCount % 10 == 0)
+			{
+				if (speed >= 10) speed--;
+			}
+
+			// Validate that piece can be moved
 			if (DoesPiecefit(currentPiece, currentRotation, currentX, currentY + 1))
 			{
 				currentY++;
@@ -194,16 +213,7 @@ int main()
 					}
 				}
 
-				pieceCount++;
-				if (pieceCount % 10 == 0)
-				{
-					if (speed >= 10)
-					{
-						speed--;
-					}
-				}
-
-				// Check full lines
+				// Check for lines
 				for (int py = 0; py < 4; py++)
 				{
 					if (currentY + py < fieldHeight - 1)
@@ -211,7 +221,7 @@ int main()
 						bool line = true;
 						for (int px = 1; px < fieldWidth - 1; px++)
 						{
-							line &= (field[(currentY + py * fieldWidth + px)]) != 0;
+							line &= (field[(currentY + py) * fieldWidth + px]) != 0;
 						}
 						
 						if (line)
@@ -226,11 +236,9 @@ int main()
 					}
 				}
 
+				// Update score
 				score += 25;
-				if (!lines.empty())
-				{
-					score += (1 << lines.size()) * 100;
-				}
+				if (!lines.empty()) score += (1 << lines.size()) * 100;
 
 				// Choose next piece
 				currentX = fieldWidth / 2;
@@ -242,10 +250,10 @@ int main()
 				gameOver = !DoesPiecefit(currentPiece, currentRotation, currentX, currentY);
 			}
 
-			speedCounter = 0;
+			
 		}
 
-		// Render 
+		// ----------- Render ----------- 
 		// Field
 		for (int x = 0; x < fieldWidth; x++)
 		{
@@ -255,6 +263,7 @@ int main()
 				
 			}
 		}
+
 		// Current piece
 		for (int px = 0; px < 4; px++)
 		{
@@ -267,10 +276,11 @@ int main()
 				}				
 			}
 		}
+
 		// Score
 		swprintf(&screen[2 * screenWidth + fieldWidth + 6], 16, L"SCORE: %8d", score);
 
-
+		// Line completion animation
 		if (!lines.empty())
 		{
 			WriteConsoleOutputCharacter(console, screen, screenWidth* screenHeight, { 0, 0 }, & bytesWritten);
@@ -287,12 +297,16 @@ int main()
 					field[px] = 0;
 				}
 			}
+
+			lines.clear();
 		}
 
+		// Print the frame to the console
 		WriteConsoleOutputCharacter(console, screen, screenWidth * screenHeight, { 0, 0 }, &bytesWritten);
 
 	}
 
+	// Well, we are done here!
 	CloseHandle(console);
 	cout << "Game Over!! Score:" << score << endl;
 	system("pause");
