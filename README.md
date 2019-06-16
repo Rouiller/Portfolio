@@ -8,11 +8,11 @@ Welcome to my portfolio! You can find here my personal C++ side projects. The go
 
 ## Projects
 ### ConsoleFPS
+![CONSOLEFPS](https://github.com/Rouiller/Portfolio/blob/master/screenshots/consolefps.PNG)
 * __w__ : Move forward
 * __a__ : Rotate left
 * __s__ : Move back
 * __d__ : Rotatte right
-![CONSOLEFPS](https://github.com/Rouiller/Portfolio/blob/master/screenshots/consolefps.PNG)
 
 ### Tetris
 ![TETRIS](https://github.com/Rouiller/Portfolio/blob/master/screenshots/tetris.PNG)
