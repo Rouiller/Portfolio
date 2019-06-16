@@ -259,7 +259,7 @@ int main()
 		{
 			for (int y = 0; y < fieldHeight; y++)
 			{
-				screen[(y + 2) * screenWidth + (x + 2)] = L" ABCDEFG=#"[field[y * fieldWidth + x]];
+				screen[(y + 2) * screenWidth + (x + 2)] = L" ABCDEFG=\x2588"[field[y * fieldWidth + x]];
 				
 			}
 		}
