@@ -1,8 +1,10 @@
 # Portfolio
-Welcome to my portfolio! You can find here my personal C++ side projects. The goal of those projects is to increase my knowledge on the language, as well as to solve small challenge I give myself.
+Welcome to my portfolio! You can find here my personal C++ side projects. The goal of those projects is to increase my knowledge on the language, as well as to solve small challenges I give myself.
 
 ## Tetris
-![TETRIS](https://github.com/Rouiller/Portfolio/blob/master/screenshots/tetris.PNG)
+<p align="center">
+    ![TETRIS](https://github.com/Rouiller/Portfolio/blob/master/screenshots/tetris.PNG)
+</p>
 
 ### Consol size
 * Width : 120 px
